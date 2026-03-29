@@ -10,13 +10,13 @@ const COLORS = ['#38bdf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#fb923c'
 const SOURCE_LIST = ['api-service', 'worker-service', 'cache-service', 'auth-service', 'db-service']
 
 function pivotTimeseries(rows: any[], dimKey: string): any[] {
-  const map: Record<string, Record<string, number>> = {}
+  const map: Record<string, any> = {}
   for (const row of rows) {
-    const ts = row.timestamp
+    const ts = row.timestamp as string
     if (!map[ts]) map[ts] = { ts }
     map[ts][row[dimKey] ?? 'unknown'] = row.count
   }
-  return Object.values(map).sort((a, b) => a.ts.localeCompare(b.ts))
+  return Object.values(map).sort((a, b) => (a.ts as string).localeCompare(b.ts as string))
 }
 
 export default function Timeseries() {

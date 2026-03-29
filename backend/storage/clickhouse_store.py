@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 from clickhouse_driver import Client
 
@@ -27,7 +28,8 @@ class ClickHouseStore:
         self._client: Client = None
 
     def connect(self):
-        self._client = Client(host=self._host, port=self._port, database=self._database)
+        password = os.getenv('CLICKHOUSE_PASSWORD', '')
+        self._client = Client(host=self._host, port=self._port, database=self._database, password=password)
         self._client.execute(CREATE_TABLE_SQL)
         logger.info('ClickHouse connected and schema initialized')
 

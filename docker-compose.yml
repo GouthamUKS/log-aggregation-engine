@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: logs
       POSTGRES_USER: postgres
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,6 +19,10 @@ services:
 
   clickhouse:
     image: clickhouse/clickhouse-server:24.3-alpine
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
     ports:
       - "8123:8123"
       - "9000:9000"
@@ -44,6 +48,7 @@ services:
       POSTGRES_DSN: postgresql://postgres:postgres@postgres:5432/logs
       CLICKHOUSE_HOST: clickhouse
       CLICKHOUSE_PORT: "9000"
+      CLICKHOUSE_PASSWORD: clickhouse
       COLD_STORAGE_PATH: /app/cold_storage
       DLQ_PATH: /app/dlq.jsonl
     volumes:
@@ -76,7 +81,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3010:3000"
     depends_on:
       backend:
         condition: service_healthy
